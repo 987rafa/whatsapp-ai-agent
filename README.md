@@ -21,7 +21,8 @@
 - 🔒 **Self-hosted means private** — your session, your messages, your machine. There are no servers in the middle because there is no middle.
 - 🖼️ **It understands images** — send a photo and ask anything: *describe it, translate it, read the text in it.*
 - 🧩 **Plugin architecture** — add a command in ~10 lines; `!help` builds itself from your plugins.
-- 🧵 **Conversation memory** — every chat keeps context, and `!olvidar` wipes it when you want a fresh start.
+- 🧵 **Real long-term memory** — recent messages + a rolling summary that updates itself + a **dossier for every contact** (name and facts learned from the chat). `!quien` shows it.
+- 🤖 **Autonomous secretary mode** — it answers your DMs on its own (as your assistant, or in your name), with human-like pauses, and 🔔 pings you when a message really needs a human.
 - ⚡ **Two ways to link** — scan a QR or use an **8-digit pairing code** (`PAIRING_PHONE`), no QR needed.
 - 🐳 **Boring deployment** — Docker, docker-compose, Render, or plain `npm start`.
 
@@ -66,9 +67,22 @@ Aria ❯ The grilled fish with salad is your best bet — about 420 kcal…
 You  ❯ !clima Medellín
 Aria ❯ 🌦️ Medellín: ⛅️ +24°C (sensación +25°C) · 💧62% · 🌬️↘9km/h
 
+— and meanwhile, the DMs your contacts send are answered all by itself: —
+
+Juan ❯ ¿me pasas la cotización hoy?
+Aria ❯ ¡Claro, Juan! La tenía lista — te la envío hoy mismo, ¿la prefieres en PDF?
+
 You  ❯ !ia off        ← mute the AI in this chat
 Aria ❯ 🔕 IA desactivada en este chat.
 ```
+
+## 🤖 Autonomous secretary mode
+
+By default the agent treats every **private chat** as a real conversation: it identifies who is writing (name + facts it learns from the messages themselves), keeps a long-term memory (recent window + rolling summary) and replies on its own — no commands needed, ever.
+
+- **Modes** — `AUTO_REPLY_MODE=assistant` (introduces itself as your secretary) or `owner` (replies in your name; and stays honest if someone asks point-blank whether it's an AI).
+- **Escalation** — set `OWNER_NOTIFY` and, when a message truly needs a human (money, legal, personal urgency), it answers politely *and* sends you a 🔔 summary of what happened.
+- **Control** — `!ia off` mutes a chat, `AUTO_REPLY_DENY` / `AUTO_REPLY_ALLOW` filter numbers, and groups stay mention-only.
 
 ## 🧩 Built-in commands
 
@@ -79,7 +93,11 @@ Aria ❯ 🔕 IA desactivada en este chat.
 | `!calc (2+3)*4^2` | Safe calculator (own parser, no `eval`) |
 | `!clima Bogotá` | Current weather for any city |
 | `!ia on` / `!ia off` | Enable or mute the AI per chat |
-| `!olvidar` | Wipe the AI's memory for this chat |
+| `!quien` | Contact dossier: what the agent knows about this person |
+| `!nombre Juan` | Save this contact's name |
+| `!nota Espera cotización` | Teach it a durable fact about the contact |
+| `!resumen` | Show the conversation summary it remembers |
+| `!olvidar` / `!olvidar todo` | Wipe memory (and optionally the contact dossier) |
 
 In **groups** the AI only answers when it's mentioned (or when you reply to one of its messages) — groups stay quiet otherwise.
 
@@ -102,6 +120,13 @@ Everything lives in `.env` (see [`.env.example`](.env.example)):
 | `AI_GROUP_MENTIONS` | `true` | In groups, reply only when mentioned |
 | `AI_HISTORY_SIZE` | `12` | Messages of memory per chat |
 | `AI_SYSTEM_PROMPT` | friendly assistant | The agent's personality |
+| `AUTO_REPLY_MODE` | `assistant` | `assistant` (as your secretary) or `owner` (in your name) |
+| `OWNER_NAME` | — | Your name — the agent signs as your assistant |
+| `OWNER_STYLE` | natural & brief | How it should write |
+| `AUTO_REPLY_ALLOW` | — | Only these numbers get replies (comma separated) |
+| `AUTO_REPLY_DENY` | — | Never reply to these numbers |
+| `OWNER_NOTIFY` | — | Number that receives 🔔 alerts when a human is needed |
+| `MEMORY_SUMMARY_EVERY` | `16` | Messages between background memory updates |
 | `PAIRING_PHONE` | — | Link with a code instead of QR |
 | `DATA_DIR` | `./data` | Where session + store are kept |
 
@@ -122,7 +147,7 @@ flowchart LR
     B --> R{Message router}
     R -->|"!command"| P[Plugins<br/>ping · calc · clima · ia]
     R -->|text or image| A[AI provider<br/>Gemini / OpenAI-compatible]
-    A --> M[(Memory + settings<br/>JSON store)]
+    A --> M[(Memory: window + summary<br/>+ contact dossiers)]
     P --> O[Reply]
     A --> O
     O --> WA
@@ -157,6 +182,7 @@ Works great on any small VPS, Docker host, or a Raspberry Pi left at home. The o
 
 ## 🗺️ Roadmap
 
+- [x] Autonomous DM replies with contact dossiers and human escalation
 - [ ] Tool/function calling (let the AI use the built-in commands itself)
 - [ ] Voice notes → transcription (Whisper) → reply
 - [ ] RAG: answer questions from your own documents

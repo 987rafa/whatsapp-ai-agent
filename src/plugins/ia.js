@@ -20,10 +20,13 @@ export default [
   {
     name: 'olvidar',
     aliases: ['reset'],
-    description: 'Borra la memoria de la IA en este chat',
+    description: 'Borra la memoria del chat — "!olvidar todo" borra también el contacto',
     run: async (ctx) => {
-      ctx.clearMemory();
-      return '🧹 Memoria borrada. Empezamos de cero.';
+      const all = ctx.args.join(' ').toLowerCase().includes('todo');
+      ctx.clearMemory({ all });
+      return all
+        ? '🧹 Memoria y ficha del contacto borradas. Empezamos de cero.'
+        : '🧹 Memoria del chat borrada. (La ficha del contacto se mantiene; usa `!olvidar todo` para borrar todo.)';
     },
   },
 ];

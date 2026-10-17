@@ -21,7 +21,8 @@
 - 🔒 **Self-hosted = privado** — tu sesión, tus mensajes, tu máquina. No hay servidores intermediarios porque no hay intermediarios.
 - 🖼️ **Entiende imágenes** — manda una foto y pídele lo que quieras: *descríbela, tradúcela, léela.*
 - 🧩 **Arquitectura de plugins** — agrega un comando en ~10 líneas; `!help` se genera solo.
-- 🧵 **Memoria de conversación** — cada chat mantiene contexto y `!olvidar` lo borra cuando quieras.
+- 🧵 **Memoria real de largo plazo** — mensajes recientes + un resumen que se actualiza solo + **ficha de cada contacto** (nombre y datos aprendidos de la conversación). `!quien` te la muestra.
+- 🤖 **Modo secretario autónomo** — responde solo tus privados (como tu asistente, o en tu nombre), con pausas humanas, y 🔔 te avisa cuando algo necesita de verdad a una persona.
 - ⚡ **Dos formas de vincular** — QR o **código de 8 dígitos** (`PAIRING_PHONE`), sin escanear nada.
 - 🐳 **Despliegue aburrido (en el buen sentido)** — Docker, docker-compose, Render o `npm start` y ya.
 
@@ -66,9 +67,22 @@ Aria  ❯ El pescado a la plancha con ensalada es tu mejor opción — ~420 kcal
 Tú    ❯ !clima Medellín
 Aria  ❯ 🌦️ Medellín: ⛅️ +24°C (sensación +25°C) · 💧62% · 🌬️↘9km/h
 
+— y mientras tanto, los privados que le llegan los responde solo: —
+
+Juan  ❯ ¿me pasas la cotización hoy?
+Aria  ❯ ¡Claro, Juan! La tenía lista — te la envío hoy mismo, ¿la prefieres en PDF?
+
 Tú    ❯ !ia off        ← silencia la IA en este chat
 Aria  ❯ 🔕 IA desactivada en este chat.
 ```
+
+## 🤖 Modo secretario autónomo
+
+Por defecto el agente trata cada **chat privado** como una conversación real: identifica quién escribe (nombre + datos que aprende de los propios mensajes), mantiene una memoria de largo plazo (ventana reciente + resumen rodante) y responde por su cuenta — sin comandos, nunca.
+
+- **Modos** — `AUTO_REPLY_MODE=assistant` (se presenta como tu asistente) u `owner` (responde en tu nombre; y es honesto si alguien pregunta directamente si es una IA).
+- **Escalado** — configura `OWNER_NOTIFY` y, cuando un mensaje necesita de verdad a una persona (dinero, legal, urgencia personal), responde con educación *y* te manda un 🔔 con lo que pasó.
+- **Control** — `!ia off` silencia un chat, `AUTO_REPLY_DENY` / `AUTO_REPLY_ALLOW` filtran números, y los grupos siguen siendo solo por mención.
 
 ## 🧩 Comandos incluidos
 
@@ -79,7 +93,11 @@ Aria  ❯ 🔕 IA desactivada en este chat.
 | `!calc (2+3)*4^2` | Calculadora segura (parser propio, sin `eval`) |
 | `!clima Bogotá` | Clima actual de cualquier ciudad |
 | `!ia on` / `!ia off` | Activa o silencia la IA por chat |
-| `!olvidar` | Borra la memoria de la IA en este chat |
+| `!quien` | Ficha del contacto: lo que el agente sabe de esa persona |
+| `!nombre Juan` | Guarda el nombre del contacto |
+| `!nota Espera cotización` | Le enseña un dato duradero del contacto |
+| `!resumen` | Muestra el resumen que recuerda de la conversación |
+| `!olvidar` / `!olvidar todo` | Borra la memoria (y opcionalmente la ficha del contacto) |
 
 En **grupos**, la IA solo responde cuando la mencionan (o cuando respondes a uno de sus mensajes); si no, el grupo queda en silencio.
 
@@ -102,6 +120,13 @@ Todo vive en `.env` (mira [`.env.example`](.env.example)):
 | `AI_GROUP_MENTIONS` | `true` | En grupos, responder solo al ser mencionado |
 | `AI_HISTORY_SIZE` | `12` | Mensajes de memoria por chat |
 | `AI_SYSTEM_PROMPT` | asistente amable | La personalidad del agente |
+| `AUTO_REPLY_MODE` | `assistant` | `assistant` (como tu secretario) u `owner` (en tu nombre) |
+| `OWNER_NAME` | — | Tu nombre — el agente firma como tu asistente |
+| `OWNER_STYLE` | natural y breve | Cómo debe escribir |
+| `AUTO_REPLY_ALLOW` | — | Solo estos números reciben respuesta (separados por comas) |
+| `AUTO_REPLY_DENY` | — | Nunca responder a estos números |
+| `OWNER_NOTIFY` | — | Número que recibe avisos 🔔 cuando hace falta un humano |
+| `MEMORY_SUMMARY_EVERY` | `16` | Mensajes entre actualizaciones de memoria en segundo plano |
 | `PAIRING_PHONE` | — | Vincular con código en vez de QR |
 | `DATA_DIR` | `./data` | Dónde vive la sesión y el store |
 
@@ -122,7 +147,7 @@ flowchart LR
     B --> R{Enrutador}
     R -->|"!comando"| P[Plugins<br/>ping · calc · clima · ia]
     R -->|texto o imagen| A[Proveedor de IA<br/>Gemini / compatible OpenAI]
-    A --> M[(Memoria + ajustes<br/>store JSON)]
+    A --> M[(Memoria: ventana + resumen<br/>+ fichas de contactos)]
     P --> O[Respuesta]
     A --> O
     O --> WA
@@ -157,6 +182,7 @@ Funciona perfecto en cualquier VPS pequeño, host Docker o una Raspberry Pi en c
 
 ## 🗺️ Roadmap
 
+- [x] Auto-respuesta autónoma en privados con ficha de contactos y escalado a humano
 - [ ] Tool calling: que la IA use los plugins por su cuenta
 - [ ] Notas de voz → transcripción (Whisper) → respuesta
 - [ ] RAG: responder desde tus propios documentos

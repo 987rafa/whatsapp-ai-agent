@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { parseNumberList, toJid } from './utils/filters.js';
 
 const bool = (value, fallback) =>
   value === undefined || value === ''
@@ -30,6 +31,17 @@ export const config = {
   groupMentions: bool(process.env.AI_GROUP_MENTIONS, true),
   historySize: Math.max(2, parseInt(process.env.AI_HISTORY_SIZE || '12', 10) || 12),
   maxTokens: Math.max(64, parseInt(process.env.AI_MAX_TOKENS || '1024', 10) || 1024),
+
+  // ── Modo secretario autónomo ─────────────────────────────────
+  autoReplyMode: (process.env.AUTO_REPLY_MODE || 'assistant').toLowerCase(), // assistant | owner
+  ownerName: process.env.OWNER_NAME || '',
+  ownerStyle:
+    process.env.OWNER_STYLE ||
+    'Responde natural: cercano, claro y breve; nunca suenes robótico.',
+  autoReplyAllow: parseNumberList(process.env.AUTO_REPLY_ALLOW),
+  autoReplyDeny: parseNumberList(process.env.AUTO_REPLY_DENY),
+  ownerNotify: toJid(process.env.OWNER_NOTIFY),
+  summaryEvery: Math.max(6, parseInt(process.env.MEMORY_SUMMARY_EVERY || '16', 10) || 16),
 
   pairingPhone: (process.env.PAIRING_PHONE || '').replace(/\D/g, ''),
 

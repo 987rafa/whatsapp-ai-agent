@@ -6,7 +6,7 @@ import { config } from '../config.js';
 
 export const name = 'openai';
 
-export async function chat({ system, history = [], prompt, image }) {
+export async function chat({ system, history = [], prompt, image, maxTokens }) {
   const messages = [{ role: 'system', content: system }];
   for (const h of history) {
     messages.push({ role: h.role, content: h.content });
@@ -34,7 +34,7 @@ export async function chat({ system, history = [], prompt, image }) {
     body: JSON.stringify({
       model: config.openai.model,
       messages,
-      max_tokens: config.maxTokens,
+      max_tokens: maxTokens ?? config.maxTokens,
     }),
     signal: AbortSignal.timeout(60_000),
   });

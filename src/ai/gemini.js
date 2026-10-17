@@ -8,7 +8,7 @@ const API = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export const name = 'gemini';
 
-export async function chat({ system, history = [], prompt, image }) {
+export async function chat({ system, history = [], prompt, image, maxTokens }) {
   const contents = history.map((h) => ({
     role: h.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: h.content }],
@@ -32,7 +32,7 @@ export async function chat({ system, history = [], prompt, image }) {
     body: JSON.stringify({
       contents,
       systemInstruction: { parts: [{ text: system }] },
-      generationConfig: { maxOutputTokens: config.maxTokens },
+      generationConfig: { maxOutputTokens: maxTokens ?? config.maxTokens },
     }),
     signal: AbortSignal.timeout(60_000),
   });

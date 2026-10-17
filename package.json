@@ -1,7 +1,7 @@
 {
   "name": "whatsapp-ai-agent",
-  "version": "0.1.0",
-  "description": "Self-hosted WhatsApp AI agent — Google Gemini (free tier) or any OpenAI-compatible LLM, plugin commands, chat memory, and image understanding. Deploy in minutes.",
+  "version": "0.2.0",
+  "description": "Self-hosted WhatsApp AI agent — Gemini (free tier) or any OpenAI-compatible LLM: autonomous DM replies, contact dossiers, long-term memory, image understanding. Docker-ready.",
   "type": "module",
   "main": "src/index.js",
   "engines": {
