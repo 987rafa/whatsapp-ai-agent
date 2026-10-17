@@ -1,0 +1,35 @@
+{
+  "name": "whatsapp-ai-agent",
+  "version": "0.1.0",
+  "description": "Self-hosted WhatsApp AI agent — Google Gemini (free tier) or any OpenAI-compatible LLM, plugin commands, chat memory, and image understanding. Deploy in minutes.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "dev": "node --watch --env-file-if-exists=.env src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "pino": "^10.4.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "keywords": [
+    "whatsapp",
+    "whatsapp-bot",
+    "ai",
+    "ai-agent",
+    "baileys",
+    "gemini",
+    "openai",
+    "ollama",
+    "chatbot",
+    "self-hosted",
+    "automation",
+    "llm"
+  ],
+  "license": "MIT"
+}

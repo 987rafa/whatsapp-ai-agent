@@ -1,0 +1,8 @@
+services:
+  whatsapp-ai-agent:
+    build: .
+    container_name: whatsapp-ai-agent
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/data
