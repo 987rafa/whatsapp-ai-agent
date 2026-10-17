@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-label="whatsapp-ai-agent — promo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b141a"/>
+      <stop offset="1" stop-color="#10222b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#25d366"/>
+      <stop offset="1" stop-color="#53bdeb"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.08" r="0.7">
+      <stop offset="0" stop-color="#25d366" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#25d366" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <rect width="1080" height="1350" fill="url(#glow)"/>
+  <circle cx="940" cy="80" r="120" fill="#25d366" opacity="0.05"/>
+  <circle cx="120" cy="1250" r="140" fill="#53bdeb" opacity="0.05"/>
+
+  <text x="540" y="150" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="62" font-weight="700" fill="#e9edef">whatsapp-ai-agent</text>
+  <rect x="420" y="180" width="240" height="8" rx="4" fill="url(#accent)"/>
+
+  <text x="540" y="300" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="46" fill="#e9edef">Tu asistente de IA</text>
+  <text x="540" y="362" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="46" fill="#25d366">dentro de tu propio WhatsApp</text>
+
+  <g font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="34" fill="#d1d7db">
+    <text x="150" y="490">🤖  Responde tus mensajes solo</text>
+    <text x="150" y="570">🧠  Aprende quién es cada contacto</text>
+    <text x="150" y="650">🧵  Memoria que no se olvida</text>
+    <text x="150" y="730">🔔  Te avisa cuando hace falta un humano</text>
+    <text x="150" y="810">🔒  Gemini gratis o 100% local (Ollama)</text>
+  </g>
+
+  <line x1="150" y1="900" x2="930" y2="900" stroke="#25d366" stroke-opacity="0.3" stroke-width="2"/>
+
+  <text x="540" y="990" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="30" fill="#8696a0">Open source · MIT · Docker · Node.js</text>
+  <text x="540" y="1090" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="36" font-weight="600" fill="#25d366">github.com/987rafa/whatsapp-ai-agent</text>
+  <text x="540" y="1170" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="28" fill="#aebac1">⭐ Dale una estrella si te sirve</text>
+</svg>
