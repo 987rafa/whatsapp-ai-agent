@@ -197,7 +197,7 @@ Funciona perfecto en cualquier VPS pequeño, host Docker o una Raspberry Pi en c
 
 ## 📄 Licencia
 
-MIT © [Rafael Álvarez](https://github.com/987rafa)
+MIT © [Rafael Álvarez · NOVUS DEV](https://github.com/987rafa)
 
 ---
 

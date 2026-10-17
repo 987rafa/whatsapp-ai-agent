@@ -21,6 +21,7 @@
 
   <text x="540" y="150" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="62" font-weight="700" fill="#e9edef">whatsapp-ai-agent</text>
   <rect x="420" y="180" width="240" height="8" rx="4" fill="url(#accent)"/>
+  <text x="540" y="232" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="20" letter-spacing="3" fill="#8696a0">by <tspan fill="#25d366" font-weight="600">NOVUS DEV</tspan></text>
 
   <text x="540" y="300" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="46" fill="#e9edef">Tu asistente de IA</text>
   <text x="540" y="362" text-anchor="middle" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="46" fill="#25d366">dentro de tu propio WhatsApp</text>

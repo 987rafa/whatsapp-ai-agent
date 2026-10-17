@@ -49,4 +49,7 @@
     <rect x="768" y="306" width="178" height="34" rx="17" fill="#0e1b22" stroke="#8696a0" stroke-opacity="0.35"/>
     <text x="788" y="328" fill="#e9edef">⚡ Node.js 22+</text>
   </g>
+
+  <!-- Brand -->
+  <text x="392" y="376" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15" letter-spacing="1.5" fill="#8696a0">by <tspan fill="#25d366" font-weight="600">NOVUS DEV</tspan></text>
 </svg>

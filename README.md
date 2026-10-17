@@ -197,7 +197,7 @@ PRs are welcome! Fork → branch → `npm test` → PR. Ideas and bugs: [open an
 
 ## 📄 License
 
-MIT © [Rafael Álvarez](https://github.com/987rafa)
+MIT © [Rafael Álvarez · NOVUS DEV](https://github.com/987rafa)
 
 ---
 
