@@ -21,6 +21,7 @@
 - 🔒 **Self-hosted means private** — your session, your messages, your machine. There are no servers in the middle because there is no middle.
 - 🖼️ **It understands images** — send a photo and ask anything: *describe it, translate it, read the text in it.*
 - 🧩 **Plugin architecture** — add a command in ~10 lines; `!help` builds itself from your plugins.
+- 🛒 **Takes orders for your business** — `!menu` shows your live catalog and `!pedido 2 gaseosa, 1 pan tajado` sends the order straight into [NOVUS POS](https://github.com/987rafa/novus-pos).
 - 🧵 **Real long-term memory** — recent messages + a rolling summary that updates itself + a **dossier for every contact** (name and facts learned from the chat). `!quien` shows it.
 - 🤖 **Autonomous secretary mode** — it answers your DMs on its own (as your assistant, or in your name), with human-like pauses, and 🔔 pings you when a message really needs a human.
 - ⚡ **Two ways to link** — scan a QR or use an **8-digit pairing code** (`PAIRING_PHONE`), no QR needed.
@@ -92,6 +93,8 @@ By default the agent treats every **private chat** as a real conversation: it id
 | `!help` | Auto-generated command list |
 | `!calc (2+3)*4^2` | Safe calculator (own parser, no `eval`) |
 | `!clima Bogotá` | Current weather for any city |
+| `!menu` | Business menu with live prices (NOVUS POS catalog) |
+| `!pedido 2 gaseosa, 1 pan tajado` | Customer order straight into the POS orders queue |
 | `!ia on` / `!ia off` | Enable or mute the AI per chat |
 | `!quien` | Contact dossier: what the agent knows about this person |
 | `!nombre Juan` | Save this contact's name |
@@ -128,6 +131,8 @@ Everything lives in `.env` (see [`.env.example`](.env.example)):
 | `OWNER_NOTIFY` | — | Number that receives 🔔 alerts when a human is needed |
 | `MEMORY_SUMMARY_EVERY` | `16` | Messages between background memory updates |
 | `PAIRING_PHONE` | — | Link with a code instead of QR |
+| `POS_URL` | — | NOVUS POS API address (enables `!menu` / `!pedido`) |
+| `POS_API_KEY` | — | The POS `ORDERS_API_KEY` (orders channel) |
 | `DATA_DIR` | `./data` | Where session + store are kept |
 
 ### 100% local with Ollama
@@ -139,13 +144,24 @@ OPENAI_API_KEY=ollama        # any non-empty string
 OPENAI_MODEL=llama3.2        # or an llava model for image understanding
 ```
 
+### 🛒 Orders straight into [NOVUS POS](https://github.com/987rafa/novus-pos)
+
+Point the agent at your POS and customers can browse the menu and order inside WhatsApp:
+
+```env
+POS_URL=http://localhost:8000   # NOVUS POS API
+POS_API_KEY=pedidos-demo-key    # the POS ORDERS_API_KEY
+```
+
+`!menu` replies with the live catalog (prices and out-of-stock included). `!pedido 2 gaseosa, 1 pan tajado` matches the items against the catalog, sends the order to the POS (channel `whatsapp`, with the customer's name and number) and confirms the total. Orders land in the POS **Pedidos** queue, where the cashier confirms them into a sale or rejects them.
+
 ## 🏗️ How it works
 
 ```mermaid
 flowchart LR
     WA[WhatsApp] -->|messages| B[Baileys socket]
     B --> R{Message router}
-    R -->|"!command"| P[Plugins<br/>ping · calc · clima · ia]
+    R -->|"!command"| P[Plugins<br/>ping · calc · clima · pedido]
     R -->|text or image| A[AI provider<br/>Gemini / OpenAI-compatible]
     A --> M[(Memory: window + summary<br/>+ contact dossiers)]
     P --> O[Reply]
@@ -183,6 +199,7 @@ Works great on any small VPS, Docker host, or a Raspberry Pi left at home. The o
 ## 🗺️ Roadmap
 
 - [x] Autonomous DM replies with contact dossiers and human escalation
+- [x] Orders straight into [NOVUS POS](https://github.com/987rafa/novus-pos) — `!menu` + `!pedido`
 - [ ] Tool/function calling (let the AI use the built-in commands itself)
 - [ ] Voice notes → transcription (Whisper) → reply
 - [ ] RAG: answer questions from your own documents

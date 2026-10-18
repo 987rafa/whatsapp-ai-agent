@@ -45,6 +45,12 @@ export const config = {
 
   pairingPhone: (process.env.PAIRING_PHONE || '').replace(/\D/g, ''),
 
+  // ── Pedidos a NOVUS POS (integración) ─────────────────────────
+  pos: {
+    url: (process.env.POS_URL || '').replace(/\/+$/, ''),
+    apiKey: process.env.POS_API_KEY || '',
+  },
+
   logLevel: process.env.LOG_LEVEL || 'info',
   dataDir: path.resolve(process.env.DATA_DIR || './data'),
 };

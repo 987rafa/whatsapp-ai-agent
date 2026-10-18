@@ -21,6 +21,7 @@
 - 🔒 **Self-hosted = privado** — tu sesión, tus mensajes, tu máquina. No hay servidores intermediarios porque no hay intermediarios.
 - 🖼️ **Entiende imágenes** — manda una foto y pídele lo que quieras: *descríbela, tradúcela, léela.*
 - 🧩 **Arquitectura de plugins** — agrega un comando en ~10 líneas; `!help` se genera solo.
+- 🛒 **Toma pedidos para tu negocio** — `!menu` muestra el catálogo en vivo y `!pedido 2 gaseosa, 1 pan tajado` manda el pedido directo a [NOVUS POS](https://github.com/987rafa/novus-pos).
 - 🧵 **Memoria real de largo plazo** — mensajes recientes + un resumen que se actualiza solo + **ficha de cada contacto** (nombre y datos aprendidos de la conversación). `!quien` te la muestra.
 - 🤖 **Modo secretario autónomo** — responde solo tus privados (como tu asistente, o en tu nombre), con pausas humanas, y 🔔 te avisa cuando algo necesita de verdad a una persona.
 - ⚡ **Dos formas de vincular** — QR o **código de 8 dígitos** (`PAIRING_PHONE`), sin escanear nada.
@@ -92,6 +93,8 @@ Por defecto el agente trata cada **chat privado** como una conversación real: i
 | `!help` | Lista de comandos autogenerada |
 | `!calc (2+3)*4^2` | Calculadora segura (parser propio, sin `eval`) |
 | `!clima Bogotá` | Clima actual de cualquier ciudad |
+| `!menu` | Menú del negocio con precios en vivo (catálogo de NOVUS POS) |
+| `!pedido 2 gaseosa, 1 pan tajado` | Pedido del cliente directo a la cola de Pedidos del POS |
 | `!ia on` / `!ia off` | Activa o silencia la IA por chat |
 | `!quien` | Ficha del contacto: lo que el agente sabe de esa persona |
 | `!nombre Juan` | Guarda el nombre del contacto |
@@ -128,6 +131,8 @@ Todo vive en `.env` (mira [`.env.example`](.env.example)):
 | `OWNER_NOTIFY` | — | Número que recibe avisos 🔔 cuando hace falta un humano |
 | `MEMORY_SUMMARY_EVERY` | `16` | Mensajes entre actualizaciones de memoria en segundo plano |
 | `PAIRING_PHONE` | — | Vincular con código en vez de QR |
+| `POS_URL` | — | Dirección de la API de NOVUS POS (activa `!menu` / `!pedido`) |
+| `POS_API_KEY` | — | La `ORDERS_API_KEY` del POS (canal de pedidos) |
 | `DATA_DIR` | `./data` | Dónde vive la sesión y el store |
 
 ### 100% local con Ollama
@@ -139,13 +144,24 @@ OPENAI_API_KEY=ollama        # cualquier texto no vacío
 OPENAI_MODEL=llama3.2        # o un modelo llava para entender imágenes
 ```
 
+### 🛒 Pedidos directo a [NOVUS POS](https://github.com/987rafa/novus-pos)
+
+Apunta el agente a tu POS y tus clientes pueden ver el menú y pedir por WhatsApp:
+
+```env
+POS_URL=http://localhost:8000   # API de NOVUS POS
+POS_API_KEY=pedidos-demo-key    # la ORDERS_API_KEY del POS
+```
+
+`!menu` responde con el catálogo en vivo (precios y agotados incluidos). `!pedido 2 gaseosa, 1 pan tajado` empareja los productos contra el catálogo, manda el pedido al POS (canal `whatsapp`, con nombre y número del cliente) y confirma el total. Los pedidos caen en la cola de **Pedidos** del POS, donde caja los convierte en venta o los rechaza.
+
 ## 🏗️ Cómo funciona
 
 ```mermaid
 flowchart LR
     WA[WhatsApp] -->|mensajes| B[Socket de Baileys]
     B --> R{Enrutador}
-    R -->|"!comando"| P[Plugins<br/>ping · calc · clima · ia]
+    R -->|"!comando"| P[Plugins<br/>ping · calc · clima · pedido]
     R -->|texto o imagen| A[Proveedor de IA<br/>Gemini / compatible OpenAI]
     A --> M[(Memoria: ventana + resumen<br/>+ fichas de contactos)]
     P --> O[Respuesta]
@@ -183,6 +199,7 @@ Funciona perfecto en cualquier VPS pequeño, host Docker o una Raspberry Pi en c
 ## 🗺️ Roadmap
 
 - [x] Auto-respuesta autónoma en privados con ficha de contactos y escalado a humano
+- [x] Pedidos directo a [NOVUS POS](https://github.com/987rafa/novus-pos) — `!menu` + `!pedido`
 - [ ] Tool calling: que la IA use los plugins por su cuenta
 - [ ] Notas de voz → transcripción (Whisper) → respuesta
 - [ ] RAG: responder desde tus propios documentos
